@@ -73,6 +73,7 @@ void pilha_pop(s_pilha* pilha){
         printf("Pilha ja vazia\n");
     }
 }
+
 // Adicionamos o elemento a pilha
 void add2pilha(s_pilha* pilha, int uinput){
     if(pilha->base == NULL){
