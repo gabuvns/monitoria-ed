@@ -16,11 +16,11 @@ fosse divisivel por 3.
 Por não ter conhecimento da função rand() e ser apaixonado por numeros assim como seu tio,
 resolveu criar o seguinte algoritmo para realizar o sorteio:
 
-O iterador deveria percorrer X nós da lista, onde X é definido como sendo 
+O iterador deveria percorrer X nós da lista (a partir do primeiro elemento, seu proprio nome), onde X é definido como sendo 
 a soma do número de letras de todos os nomes.
 
-A entrada é composta pelo nomes dos participantes (que possuem no máximo 14 letras sem espaços), sendo que o primeiro nome é sempre o do sobrinho, e
-deve ser interrompida ao digitar o número 0. 
+A entrada é composta pelo nomes dos participantes (que possuem no máximo 14 letras sem espaços),
+sendo que o primeiro nome é sempre o do sobrinho, e deve ser interrompida ao digitar o número 0. 
 
 A saida consiste no nome do ganhador.
 
@@ -31,7 +31,6 @@ obs: sabemos que pelo menos 4 pessoas participaram do sorteio (incluindo o sobri
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 
 typedef struct pessoa{
@@ -121,7 +120,7 @@ int get_total_letras(s_lista* lista){
     int tamanho = 0;
 
     for(int i = 0; i < lista->tamanho; i++){  
-        tamanho = tamanho + aux->tam_nome;
+        tamanho = tamanho + strlen(aux->nome);
         aux = aux->prox;
     }
 
@@ -129,13 +128,22 @@ int get_total_letras(s_lista* lista){
 }
 
 void reduz_lista(s_lista* lista){
-    int new_tam = lista->tamanho/2;
+    int new_tam = 0;
+    if(lista->tamanho % 2 == 0){
+        new_tam = lista->tamanho/2;
+    }
 
+    else{
+        new_tam = (lista->tamanho+ 1)/2;
+        new_tam--;
+
+    }
     s_pessoa* iterator = lista->inicial;
     s_pessoa* prev;
     
     for(int i = 1; i < new_tam; i++){
-        for(int i = 0; i < lista->tamanho;i++){      
+
+        for(int i = 0; i < lista->tamanho;i++){    
             prev = iterator;
             iterator = iterator->prox;
         }
@@ -152,12 +160,12 @@ void reduz_lista(s_lista* lista){
 void realiza_sorteio(s_lista* lista){
 
     s_pessoa* vencedor;
+
     int tot_letras = get_total_letras(lista);
     
     //Verificamos se o sobrinho vai ser pago ou nao
     if(tot_letras % 3 == 0){
         //sorteio normal
-        int tot_letras = get_total_letras(lista);
 
         s_pessoa* iterator = lista->inicial;
 
@@ -165,19 +173,27 @@ void realiza_sorteio(s_lista* lista){
             iterator = iterator->prox;
         }
         vencedor = iterator;
+
     }
 
     else{
         // Sobrinho tem mais chances
+
         reduz_lista(lista);
+
         s_pessoa* iterator = lista->inicial;
+
         for(int i = 0; i < tot_letras/2;i++){
+
             if(iterator->prox != NULL){
+
                 iterator = iterator->prox;
             }
         }
         vencedor = iterator;
     }
+
+
     char* aux_print = vencedor->nome; 
 
     printf("Vencedor: %s\n", aux_print);
@@ -189,7 +205,6 @@ int main(){
     s_lista* lista = cria_lista();
     preenche_lista(lista);
     realiza_sorteio(lista);
-
     
     return 0;
 }

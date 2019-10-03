@@ -1,26 +1,8 @@
-/*A população de manhumirim é tão pequena que todos se conhecem e todos são vizinhos de todos
-como são muito próximos, resolveram dividir os afazeres de casa. Algumas pessoas lavavam as roupas,
-outras lavavam os carros, outros realizavam manutenção das casa.
-Um engenheiro ficou responsável por lavar os copos da louça, no fim do dia.
 
-Para agilizar tal tarefa ele criou uma máquina que conseguia lavar os copos, entretanto,
-os habitantes de Manhumirim possuiam copos do tamanho 1 ao 10, e a máquina
-aceitava somente copos do mesmo tipo de cada vez.
+// Faça um programa que leia tanto frases do teclado quanto números separados por espaço, em seguida separe em duas pilhas as frases e os números,
+// E imprima na tela primeiro a pilha de palavras e depois a pilha de numeros (ambos do topo para a base).  
+// baseado em um execício da professora Leticia Winkler
 
-Para isso criou uma outra máquina que recebia uma pilha de copos e a organizava em
-diversas pilhas, que deveriam ser inseridas na maquina do menor copo para o maior.
-
-Faça o programa responsável pela segunda máquina, onde a entrada é composta pelos copos
-(é necessário informar apenas seu tamanho). O programa encerra ao se digitar end 
-
-E a saída é composta pel
-*/
-
-/*
-Faça um programa que leia tanto frases do teclado quanto números separados por espaço, em seguida separe em duas pilhas as frases e os números,
-E imprima na tela primeiro a pilha de palavras e depois a pilha de numeros (ambos do topo para a base).  
-baseado em um execício da professora Leticia Winkler
-*/
 
 #include <stdio.h>
 #include <stdlib.h>

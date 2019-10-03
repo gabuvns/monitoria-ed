@@ -3,10 +3,9 @@ Você é um aluno de computação muito ocupado, e por causa disso tem dificulda
 com isso em mente, resolveu criar um programa que organize suas atividades.
 
 A entrada consiste do nome da tarefa seguida de um numero de sua prioridade (sendo 1 o mais prioritário).
-O programa encerra quando é digitado "end";
+Após o usuário digitar "end", deverá requerer um valor (int) X do usuário, que representa quantas tarefas foram cumpridas.
 
-A saida consiste da fila ordenada primeiramente em prioridade, seguido por ordem de inserção.
-
+A saida consiste da fila (somente das não cumpridas) ordenada primeiramente em prioridade, seguido por ordem de inserção.
 
 */
 
@@ -99,31 +98,54 @@ void fila_add(s_fila* fila, int uprioridade, char* palavra){
     else{
         s_node* iterator = fila->frente;
         s_node* node_aux = cria_node();
+        int flag = 0;
         node_aux->prioridade = uprioridade;
         node_aux->palavra = palavra; 
-    
-        if(iterator->prioridade > uprioridade){
-            fila->frente = node_aux;
+
+        if(uprioridade< iterator->prioridade){
+            iterator->next = node_aux;
             node_aux->prev = iterator;
-    
-
+            fila->frente = node_aux;
         }
-
         else{
-            if(iterator->prev != NULL){
-                while(iterator->prioridade < uprioridade && iterator->prev != NULL){
-                    iterator = iterator-> prev;
+            while(iterator->prioridade < uprioridade && flag == 0){
+                if(iterator->prev == NULL){
+                    flag = 1;
                 }
-                iterator->prev = node_aux;
-                node_aux->next = iterator;
-                fila->fim = node_aux;
+                else{
+                    iterator = iterator->prev;
+                }
             }
 
+            if (flag){
+                if(iterator->prioridade > uprioridade){
+                    iterator->next->prev = node_aux;
+                    node_aux->next = iterator->next;
+                    node_aux->prev = iterator;
+                    iterator->next = node_aux;
+                    iterator->prev = NULL;
+                }
+                else{
+                    iterator->prev = node_aux;
+                    node_aux->next = iterator;
+                }
+            }
+            else if(iterator->prev != NULL){
+                iterator->prev->next = node_aux;
+                node_aux->prev = iterator->prev;
+            }
             else{
-                iterator->prev = node_aux;
-                node_aux->next = iterator;
-                fila->fim = node_aux;
-            }   
+
+                node_aux->next = iterator->next;
+                node_aux->prev = iterator;
+                iterator->next = node_aux;
+                node_aux->next->prev = node_aux;
+
+            }
+            
+            node_aux->next = iterator;
+
+            iterator->prev = node_aux;
         }
     }
     fila->tam++;
@@ -138,12 +160,11 @@ void limpa_fila(s_fila* fila){
     free(fila);
 }
 void print_fila(s_fila* fila){
+    printf("Tamanho da lista: %d\n", fila->tam);
     s_node* aux = fila->frente;
-    int i=0;
-    while(aux != NULL){
+    for(int i = 0;i<fila->tam;i++){
         printf("Atividade: %s Prioridade: #%d\n",aux->palavra, aux->prioridade);
-        aux = aux ->prev;
-        i++;
+        aux = aux->prev;
     }
 }
 
@@ -161,16 +182,17 @@ void processa_fila(s_fila* fila){
     
     }while(strcmp(uinput,"end"));
     free(uinput);
-
-
-
 }
 
 int main(){
     s_fila* fila = cria_fila();
     processa_fila(fila);
     
+    int tarefas_concluidas = 0;
+    scanf("%d", &tarefas_concluidas);
+    for(int i =0; i < tarefas_concluidas;i++){
+        fila_pop(fila);
+    }
     print_fila(fila);
-    printf("tamanho fila = %d\n", fila->tam);
-    limpa_fila(fila);
+   
 }

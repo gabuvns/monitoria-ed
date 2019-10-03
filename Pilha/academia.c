@@ -161,6 +161,5 @@ int main(){
     pilha_enche(pilha);
     pilha_limpa(pilha);
     
-
     return 0;
 }

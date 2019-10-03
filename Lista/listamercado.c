@@ -5,10 +5,10 @@ pediu para ele anotar no computador, entretanto, por ser muito habilidoso Elliot
 para facilitar a hora da compra, não apenas era capaz de receber alimentos como também retira-los caso necessario);
  
 
-O input funciona da segufloat maneira: o usuario digita o nome do produto seguido pelo seu preco (com duas casas decimais)
-- por exemplo "abacaxi 15"-,
+O input funciona da seguinte maneira: o usuario digita o nome do produto seguido pelo seu preco (com duas casas decimais)
+- por exemplo "abacaxi 15.50" (float) -,
 este item é adicionado, caso o usuario digite "rm abacaxi" o item abacaxi deve ser removido da lista.
-O programa acaba quando o usuário digita '0'.
+O programa acaba quando o usuário digita "end".
 
 output:
 O output final deve mostrar toda a lista, no formato "item preco" ("abacaxi 15.25"),
@@ -22,7 +22,7 @@ e no fim a quantidade de itens e a soma de todos os preços dos itens da lista.
 
 typedef struct item{
     char* nome;
-    float preco;
+    double preco;
     struct item* prox;
     struct item* prev;
 }s_item;
@@ -42,7 +42,7 @@ s_lista* cria_lista(){
     return aux;
 }
 
-s_item* cria_item(char* nome, float preco){
+s_item* cria_item(char* nome, double preco){
     s_item* aux = malloc(sizeof(s_item));
     
     aux->prox = NULL;
@@ -76,33 +76,40 @@ void remove_item(s_lista* lista){
     }
 
     else{
-        lista->inicial = lixo->prox;
+        if(lixo->prox != NULL){
+            lista->inicial = lixo->prox;
+        }
+        else{
+            lista->final = NULL;
+        }
+
         lixo->prev = NULL;
     }
 
+    lista->tamanho--;
+
     free(lixo->nome);
     free(lixo);
-    lista->tamanho--;
+
 }
 
 void preenche_lista(s_lista* lista){
     char aux_nome[15];
-    float preco = 0;
+    double preco = 0;
 
-    while(aux_nome[0] != '0'){
+    while(strcmp(aux_nome, "end")){
         scanf("%s", aux_nome);
-        
-        if(aux_nome[0] != '0'){
+        //Podemos usar tambem strcmp() para comparacao!
+        if(strcmp(aux_nome, "end")){
             //Verificamos se eh para remover
             if(aux_nome[0] == 'r' && aux_nome[1] == 'm'){             
                 remove_item(lista);
-                
             }
 
             else{
                 //Se nao pega o input normalmente
-                scanf("%f", &preco);
-                //  printf("item = %s, valor = %.2f\n", aux_nome, preco);
+                scanf("%lf", &preco);
+                
                 char* ptr_nome = malloc(15);
                 strcpy(ptr_nome, aux_nome);
 
@@ -124,37 +131,42 @@ void preenche_lista(s_lista* lista){
                     
                 }
             }
-          
         }    
     }
 }
 void limpa_lista(s_lista* lista){
-    s_item* iterator = lista->inicial;
-    s_item* lixo = lista->inicial;
+    if(lista->tamanho > 0){
+        s_item* iterator = lista->inicial;
+        s_item* lixo = lista->inicial;
 
-    while(iterator->prox !=NULL){
-        lixo = iterator;
-        free(lixo->nome);
-        free(lixo);
-        iterator = iterator->prox;
+        while(iterator->prox !=NULL){
+            lixo = iterator;
+            free(lixo->nome);
+            free(lixo);
+            iterator = iterator->prox;
+        }
+        free(iterator->nome);
+        free(iterator);
+        free(lista);
     }
-    free(iterator->nome);
-    free(iterator);
-    free(lista);
 }
 
 void print_lista(s_lista* lista){
-    float preco_total = 0;
-    s_item* iterator = lista->inicial;
-    //Para evitar bugs
-    if(lista->inicial != NULL){
+    if(lista->inicial != NULL && lista->tamanho > 0){
+        double preco_total = 0;
+        s_item* iterator = lista->inicial;
+        //Para evitar bugs
+    
         while(iterator != NULL){
             preco_total = preco_total + iterator->preco;
             printf("%s %.2f\n", iterator->nome, iterator->preco);
             iterator = iterator->prox;
         }   
+        printf("Total de itens: %d\nPreco total: %.2f\n", lista->tamanho, preco_total);
     }
-    printf("Total de itens: %d\nPreco total: %.2f\n", lista->tamanho, preco_total);
+    else{
+        printf("Lista vazia\n");
+    }
 
 }
 

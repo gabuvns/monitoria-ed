@@ -1,26 +1,25 @@
 /*
 Muitos séculos atrás antes de computadores existirem os piratas eram responsáveis por administrar toda a carga do navio manualmente.
-Por se tratarem de cargas muito valiosas era necessário ter cuidado,
-por isso para evitar roubos um capitão dividiu esta tarefa entre seus dois mais fieis marujos,
+Por se tratarem de cargas muito valiosas era necessário ter cuidado, por isso para evitar roubos um capitão dividiu esta tarefa entre seus dois mais fieis marujos,
 sendo eles Cormac e Kenway. Como eram piratas obviamente não obedeceram e bolaram um esquema pra roubar a carga.
 
 O navio comportava um número N de cargas, sabiam que podiam roubar 40% (arredondando para baixo) de toda a carga do navio sem que o capitão descobrisse.
-Como visavam sempre o maior lucro possível procuravam sempre as cargas de maior valor.
-Para que se lembrassem qual carga pegar, anotavam o numero das cargas em uma lista Z.
+Como visavam sempre o maior lucro possível procuravam sempre as cargas de maior valor. Para que se lembrassem qual carga pegar, anotavam o numero das cargas em uma lista Z.
 
-A entrada consiste em um numero N que irá representar o total de cargas que o navio possui,
-em seguida cada linha será composta pelo ID X da carga e pelo valor Y da carga. Além disso,
-sabe-se que não existem IDs repetidos.
+A entrada consiste em um numero N que irá representar o total de cargas que o navio possui, em seguida cada linha será composta pelo ID X da carga e pelo valor Y da carga. Além disso,
+sabe-se que não existem IDs repetidos (Tanto o ID quanto o valor da carga são valores inteiros). 
 
-A saida consiste nos IDs que os piratas anotaram na lista, separados por espaço, além disso são ordenados pelo valor de cada carga de modo decrescente. Caso não seja possivel roubar nenhuma 
+A saida consiste  na quantidade de carga disponivel para roubo ("roubo disponivel: %d") e nos IDs ("IDs: %d %d")que os piratas anotaram na lista, separados por espaço, além disso são ordenados pelo valor de cada carga de modo decrescente. Caso não seja possivel roubar nenhuma 
 carga, o programa deve informar "Nenhum roubo disponivel".
 
 Dica: Lembre-se de compilar com -lm se utilizar a <math.h>
 */
 
+
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+
 
 typedef struct carga{
     int id;
@@ -65,11 +64,7 @@ void preenche_lista(s_lista* lista, int tamanho){
         }
                
         else{
-            s_carga* atual = lista->inicial;
-
-            while(atual->prox != NULL){    
-                atual = atual->prox;
-            } 
+            s_carga* atual = lista->final;
 
             if(valor > atual->valor){
                 atual->prox = add_carga(id, valor);
@@ -80,19 +75,12 @@ void preenche_lista(s_lista* lista, int tamanho){
             else{
                 s_carga* aux = add_carga(id,valor);
 
+                while(atual->valor > valor && atual->ant != NULL){
+                    atual = atual->ant;
+                }   
+                aux->ant = atual->ant;
+
                 aux->prox = atual;
-
-                if(atual->ant != NULL){
-                    aux->ant = atual->ant;
-                    aux->ant->prox = aux;
-                }
-
-                else{
-                    aux->ant = NULL;
-                    lista->inicial = aux;
-                }
-                lista->final = atual;
-                atual->prox = NULL;
                 atual->ant = aux;
 
             }
@@ -103,7 +91,6 @@ void preenche_lista(s_lista* lista, int tamanho){
 
 void print_lista(s_lista* lista){
     s_carga* iterator = lista->inicial;
-
     while(iterator!=NULL){
         printf("%d ", iterator->id);
         iterator = iterator->prox; 
@@ -115,16 +102,21 @@ void print_carga_roubada(s_lista* carga_total, int roubo_disponivel){
     s_carga* aux = carga_total->final; 
 
     if(roubo_disponivel <=0){
-        printf("roubo disponivel = %d\n", roubo_disponivel);
+    
         printf("Nenhum roubo disponivel\n");
     }
 
     else{
+        printf("roubo disponivel = %d\n", roubo_disponivel);
+        printf("IDs: ");
+
         for(int i=roubo_disponivel; i >= 1;i--){
             printf("%d ",aux->id);
+        
             aux = aux->ant;
 
         }
+        printf("\n");
     }
  
 }
@@ -137,7 +129,7 @@ int main(){
     preenche_lista(carga_total, n);
 
     //Calculamos o total a ser roubado
-    int roubo_disponivel = floor(n*0.4);
+    int roubo_disponivel = n*0.4;
 
     print_carga_roubada(carga_total, roubo_disponivel);
    

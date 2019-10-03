@@ -8,7 +8,7 @@ A cada pessoa chamada todos avançam uma posição, e a pessoa chamada vai para 
 
 A entrada consiste dos nomes das pessoas(somente nomes simples), e de um numero X. O programa
 deve ler os nomes até que seja digitado X, onde X é o número de pessoas chamadas.
-
+Os nomes são digitados na ordem que estão na fila, da frente para trás.
 A saida consiste no nome das  duas pessoas que estarão na frente e no fim da fila. 
 */
 
